@@ -1,0 +1,42 @@
+services:
+  client:
+    container_name: client
+    build:
+      context: ./client
+      dockerfile: docker/Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./client:/workspace
+    environment:
+      - WATCHPACK_POLLING=true
+
+  server:
+    container_name: server
+    build:
+      context: ./server
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./server:/workspace
+
+  db:
+    container_name: db
+    build:
+      context: ./db
+      dockerfile: docker/Dockerfile
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: crypto_portfolio
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+      TZ: Asia/Tokyo
+    volumes:
+      - storage:/var/lib/mysql
+
+volumes:
+  storage:
